@@ -1,0 +1,48 @@
+import random
+
+# Función para verificar si un número es primo
+def es_primo(numero):
+    if numero <= 1:
+        return False
+    for i in range(2, int(numero ** 0.5) + 1):
+        if numero % i == 0:
+            return False
+    return True
+
+# Función para tirar los dados
+def tirar_dados():
+    return random.randint(1, 6)
+
+# Función para jugar Prime Jack
+def jugar_prime_jack():
+    # Turno del Jugador 1
+    total_jugador1 = tirar_dados() + tirar_dados()
+    print(f"Jugador 1 tira los dados y obtiene: {total_jugador1}")
+    
+    if total_jugador1 == 12:
+        print("Jugador 1 tiene un 12, decide tirar un dado más.")
+        total_jugador1 = min(total_jugador1 + tirar_dados(), 18)
+    
+    # Turno del Jugador 2
+    total_jugador2 = tirar_dados() + tirar_dados()
+    print(f"Jugador 2 tira los dados y obtiene: {total_jugador2}")
+    
+    if total_jugador2 == 12:
+        print("Jugador 2 tiene un 12, decide tirar un dado más.")
+        total_jugador2 = min(total_jugador2 + tirar_dados(), 18)
+    
+    # Determinar el ganador
+    print(f"Puntuación Jugador 1: {total_jugador1} (primo: {'Sí' if es_primo(total_jugador1) else 'No'})")
+    print(f"Puntuación Jugador 2: {total_jugador2} (primo: {'Sí' if es_primo(total_jugador2) else 'No'})")
+    
+    if es_primo(total_jugador1) and not es_primo(total_jugador2):
+        print("Jugador 1 gana con un número primo!")
+    elif not es_primo(total_jugador1) and es_primo(total_jugador2):
+        print("Jugador 2 gana con un número primo!")
+    elif es_primo(total_jugador1) and es_primo(total_jugador2):
+        print(f"{'Jugador 1' if total_jugador1 > total_jugador2 else 'Jugador 2'} gana con un mayor número primo!")
+    else:
+        print(f"{'Jugador 1' if total_jugador1 > total_jugador2 else 'Jugador 2'} gana!")
+
+# Ejecutar el juego
+jugar_prime_jack()
