@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <vector>
 using namespace std;
 
 // Función para verificar si un número es primo
@@ -13,9 +12,25 @@ bool esPrimo(int numero) {
     return true;
 }
 
-// Función para tirar los dados
-int tirarDados() {
-    return (rand() % 6) + 1;
+// Función para tirar un dado
+int tirarDado() {
+    return (rand() % 6) + 1;  // Genera un número entre 1 y 6
+}
+
+// Función para decidir si el jugador desea tirar de nuevo
+bool deseaTirarDeNuevo() {
+    char decision;
+    cout << "¿Deseas tirar de nuevo para acercarte a 23? (s/n): ";
+    cin >> decision;
+    return decision == 's' || decision == 'S';
+}
+
+// Función para decidir si desea dividir los dados dobles
+bool deseaDividirDobles() {
+    char decision;
+    cout << "Has sacado dobles. ¿Deseas dividir tu lanzamiento? (s/n): ";
+    cin >> decision;
+    return decision == 's' || decision == 'S';
 }
 
 // Función para jugar Prime Jack
@@ -24,47 +39,109 @@ void jugarPrimeJack() {
     int totalJugador1 = 0, totalJugador2 = 0;
 
     // Turno del Jugador 1
-    int dado1 = tirarDados(), dado2 = tirarDados();
-    cout << "Jugador 1 tira los dados: " << dado1 << " y " << dado2 << endl;
+    int dado1 = tirarDado(), dado2 = tirarDado();
+    cout << "Jugador 1 tira los dados y obtiene: " << dado1 << " y " << dado2 << endl;
     totalJugador1 = dado1 + dado2;
 
-    if (dado1 == dado2) {
-        cout << "Jugador 1 saca dobles y tira 3 dados adicionales." << endl;
-        for (int i = 0; i < 3; i++) {
-            totalJugador1 += tirarDados();
+    if (dado1 == dado2) {  // Verificación correcta de dobles
+        cout << "Jugador 1 ha sacado dobles!" << endl;
+        if (deseaDividirDobles()) {
+            cout << "Jugador 1 divide el lanzamiento y lanza 2 dados más." << endl;
+            totalJugador1 += dado1;  // Sumar la mitad del valor doblado del dado
+            int nuevoDado1 = tirarDado();
+            int nuevoDado2 = tirarDado();
+            cout << "Jugador 1 lanza 2 nuevos dados y obtiene: " << nuevoDado1 << " y " << nuevoDado2 << endl;
+            totalJugador1 += nuevoDado1 + nuevoDado2;
         }
     }
 
     if (totalJugador1 == 12) {
         cout << "Jugador 1 saca 12 y puede elegir tirar un dado." << endl;
-        totalJugador1 += tirarDados();
+        totalJugador1 += tirarDado();
         totalJugador1 = min(totalJugador1, 18);
     }
 
+    while (deseaTirarDeNuevo()) {
+        int dado1 = tirarDado();
+        int dado2 = tirarDado();
+        cout << "Jugador 1 lanza dos dados y obtiene: " << dado1 << " y " << dado2 << endl;
+        totalJugador1 += dado1 + dado2;
+
+        if (dado1 == dado2) {
+            cout << "Jugador 1 ha sacado dobles!" << endl;
+            if (deseaDividirDobles()) {
+                cout << "Jugador 1 divide el lanzamiento y lanza 2 dados más." << endl;
+                totalJugador1 += dado1;  // Sumar la mitad del valor doblado del dado
+                int nuevoDado1 = tirarDado();
+                int nuevoDado2 = tirarDado();
+                cout << "Jugador 1 lanza 2 nuevos dados y obtiene: " << nuevoDado1 << " y " << nuevoDado2 << endl;
+                totalJugador1 += nuevoDado1 + nuevoDado2;
+            }
+        }
+
+        cout << "Nuevo total Jugador 1: " << totalJugador1 << endl;
+        if (totalJugador1 > 23) {
+            cout << "Jugador 1 ha superado 23 y pierde!" << endl;
+            return;
+        }
+    }
+
     // Turno del Jugador 2
-    dado1 = tirarDados();
-    dado2 = tirarDados();
-    cout << "Jugador 2 tira los dados: " << dado1 << " y " << dado2 << endl;
+    dado1 = tirarDado();
+    dado2 = tirarDado();
+    cout << "Jugador 2 tira los dados y obtiene: " << dado1 << " y " << dado2 << endl;
     totalJugador2 = dado1 + dado2;
 
-    if (dado1 == dado2) {
-        cout << "Jugador 2 saca dobles y tira 3 dados adicionales." << endl;
-        for (int i = 0; i < 3; i++) {
-            totalJugador2 += tirarDados();
+    if (dado1 == dado2) {  // Verificación correcta de dobles
+        cout << "Jugador 2 ha sacado dobles!" << endl;
+        if (deseaDividirDobles()) {
+            cout << "Jugador 2 divide el lanzamiento y lanza 2 dados más." << endl;
+            totalJugador2 += dado1;  // Sumar la mitad del valor doblado del dado
+            int nuevoDado1 = tirarDado();
+            int nuevoDado2 = tirarDado();
+            cout << "Jugador 2 lanza 2 nuevos dados y obtiene: " << nuevoDado1 << " y " << nuevoDado2 << endl;
+            totalJugador2 += nuevoDado1 + nuevoDado2;
         }
     }
 
     if (totalJugador2 == 12) {
         cout << "Jugador 2 saca 12 y puede elegir tirar un dado." << endl;
-        totalJugador2 += tirarDados();
+        totalJugador2 += tirarDado();
         totalJugador2 = min(totalJugador2, 18);
+    }
+
+    while (deseaTirarDeNuevo()) {
+        int dado1 = tirarDado();
+        int dado2 = tirarDado();
+        cout << "Jugador 2 lanza dos dados y obtiene: " << dado1 << " y " << dado2 << endl;
+        totalJugador2 += dado1 + dado2;
+
+        if (dado1 == dado2) {
+            cout << "Jugador 2 ha sacado dobles!" << endl;
+            if (deseaDividirDobles()) {
+                cout << "Jugador 2 divide el lanzamiento y lanza 2 dados más." << endl;
+                totalJugador2 += dado1;  // Sumar la mitad del valor doblado del dado
+                int nuevoDado1 = tirarDado();
+                int nuevoDado2 = tirarDado();
+                cout << "Jugador 2 lanza 2 nuevos dados y obtiene: " << nuevoDado1 << " y " << nuevoDado2 << endl;
+                totalJugador2 += nuevoDado1 + nuevoDado2;
+            }
+        }
+
+        cout << "Nuevo total Jugador 2: " << totalJugador2 << endl;
+        if (totalJugador2 > 23) {
+            cout << "Jugador 2 ha superado 23 y pierde!" << endl;
+            return;
+        }
     }
 
     // Determinar el ganador
     cout << "Puntuación Jugador 1: " << totalJugador1 << " (primo: " << (esPrimo(totalJugador1) ? "Sí" : "No") << ")" << endl;
     cout << "Puntuación Jugador 2: " << totalJugador2 << " (primo: " << (esPrimo(totalJugador2) ? "Sí" : "No") << ")" << endl;
 
-    if (esPrimo(totalJugador1) && !esPrimo(totalJugador2)) {
+    if (totalJugador1 == totalJugador2) {
+        cout << "Es un empate!" << endl;
+    } else if (esPrimo(totalJugador1) && !esPrimo(totalJugador2)) {
         cout << "Jugador 1 gana con un número primo!" << endl;
     } else if (!esPrimo(totalJugador1) && esPrimo(totalJugador2)) {
         cout << "Jugador 2 gana con un número primo!" << endl;
