@@ -4,45 +4,122 @@ import random
 def es_primo(numero):
     if numero <= 1:
         return False
-    for i in range(2, int(numero ** 0.5) + 1):
+    for i in range(2, int(numero**0.5) + 1):
         if numero % i == 0:
             return False
     return True
 
-# Función para tirar los dados
-def tirar_dados():
+# Función para tirar un dado
+def tirar_dado():
     return random.randint(1, 6)
+
+# Función para decidir si el jugador desea tirar de nuevo
+def desea_tirar_de_nuevo():
+    decision = input("¿Deseas tirar de nuevo para acercarte a 23? (s/n): ")
+    return decision.lower() == 's'
+
+# Función para decidir si desea dividir los dados dobles
+def desea_dividir_dobles():
+    decision = input("Has sacado dobles. ¿Deseas dividir tu lanzamiento? (s/n): ")
+    return decision.lower() == 's'
 
 # Función para jugar Prime Jack
 def jugar_prime_jack():
+    random.seed()  # Inicializa la semilla aleatoria
+    total_jugador1 = 0
+    total_jugador2 = 0
+
     # Turno del Jugador 1
-    total_jugador1 = tirar_dados() + tirar_dados()
-    print(f"Jugador 1 tira los dados y obtiene: {total_jugador1}")
-    
+    dado1, dado2 = tirar_dado(), tirar_dado()
+    print(f"Jugador 1 tira los dados y obtiene: {dado1} y {dado2}")
+    total_jugador1 = dado1 + dado2
+
+    if dado1 == dado2:
+        print("Jugador 1 ha sacado dobles!")
+        if desea_dividir_dobles():
+            print("Jugador 1 divide el lanzamiento y lanza 2 dados más.")
+            total_jugador1 += dado1  # Sumar la mitad del valor doblado del dado
+            nuevo_dado1, nuevo_dado2 = tirar_dado(), tirar_dado()
+            print(f"Jugador 1 lanza 2 nuevos dados y obtiene: {nuevo_dado1} y {nuevo_dado2}")
+            total_jugador1 += nuevo_dado1 + nuevo_dado2
+
     if total_jugador1 == 12:
-        print("Jugador 1 tiene un 12, decide tirar un dado más.")
-        total_jugador1 = min(total_jugador1 + tirar_dados(), 18)
-    
+        print("Jugador 1 saca 12 y puede elegir tirar un dado.")
+        total_jugador1 += tirar_dado()
+        total_jugador1 = min(total_jugador1, 18)
+
+    while desea_tirar_de_nuevo():
+        dado1, dado2 = tirar_dado(), tirar_dado()
+        print(f"Jugador 1 lanza dos dados y obtiene: {dado1} y {dado2}")
+        total_jugador1 += dado1 + dado2
+
+        if dado1 == dado2:
+            print("Jugador 1 ha sacado dobles!")
+            if desea_dividir_dobles():
+                print("Jugador 1 divide el lanzamiento y lanza 2 dados más.")
+                total_jugador1 += dado1  # Sumar la mitad del valor doblado del dado
+                nuevo_dado1, nuevo_dado2 = tirar_dado(), tirar_dado()
+                print(f"Jugador 1 lanza 2 nuevos dados y obtiene: {nuevo_dado1} y {nuevo_dado2}")
+                total_jugador1 += nuevo_dado1 + nuevo_dado2
+
+        print(f"Nuevo total Jugador 1: {total_jugador1}")
+        if total_jugador1 > 23:
+            print("Jugador 1 ha superado 23 y pierde!")
+            return
+
     # Turno del Jugador 2
-    total_jugador2 = tirar_dados() + tirar_dados()
-    print(f"Jugador 2 tira los dados y obtiene: {total_jugador2}")
-    
+    dado1, dado2 = tirar_dado(), tirar_dado()
+    print(f"Jugador 2 tira los dados y obtiene: {dado1} y {dado2}")
+    total_jugador2 = dado1 + dado2
+
+    if dado1 == dado2:
+        print("Jugador 2 ha sacado dobles!")
+        if desea_dividir_dobles():
+            print("Jugador 2 divide el lanzamiento y lanza 2 dados más.")
+            total_jugador2 += dado1  # Sumar la mitad del valor doblado del dado
+            nuevo_dado1, nuevo_dado2 = tirar_dado(), tirar_dado()
+            print(f"Jugador 2 lanza 2 nuevos dados y obtiene: {nuevo_dado1} y {nuevo_dado2}")
+            total_jugador2 += nuevo_dado1 + nuevo_dado2
+
     if total_jugador2 == 12:
-        print("Jugador 2 tiene un 12, decide tirar un dado más.")
-        total_jugador2 = min(total_jugador2 + tirar_dados(), 18)
-    
+        print("Jugador 2 saca 12 y puede elegir tirar un dado.")
+        total_jugador2 += tirar_dado()
+        total_jugador2 = min(total_jugador2, 18)
+
+    while desea_tirar_de_nuevo():
+        dado1, dado2 = tirar_dado(), tirar_dado()
+        print(f"Jugador 2 lanza dos dados y obtiene: {dado1} y {dado2}")
+        total_jugador2 += dado1 + dado2
+
+        if dado1 == dado2:
+            print("Jugador 2 ha sacado dobles!")
+            if desea_dividir_dobles():
+                print("Jugador 2 divide el lanzamiento y lanza 2 dados más.")
+                total_jugador2 += dado1  # Sumar la mitad del valor doblado del dado
+                nuevo_dado1, nuevo_dado2 = tirar_dado(), tirar_dado()
+                print(f"Jugador 2 lanza 2 nuevos dados y obtiene: {nuevo_dado1} y {nuevo_dado2}")
+                total_jugador2 += nuevo_dado1 + nuevo_dado2
+
+        print(f"Nuevo total Jugador 2: {total_jugador2}")
+        if total_jugador2 > 23:
+            print("Jugador 2 ha superado 23 y pierde!")
+            return
+
     # Determinar el ganador
     print(f"Puntuación Jugador 1: {total_jugador1} (primo: {'Sí' if es_primo(total_jugador1) else 'No'})")
     print(f"Puntuación Jugador 2: {total_jugador2} (primo: {'Sí' if es_primo(total_jugador2) else 'No'})")
-    
-    if es_primo(total_jugador1) and not es_primo(total_jugador2):
+
+    if total_jugador1 == total_jugador2:
+        print("Es un empate!")
+    elif es_primo(total_jugador1) and not es_primo(total_jugador2):
         print("Jugador 1 gana con un número primo!")
     elif not es_primo(total_jugador1) and es_primo(total_jugador2):
         print("Jugador 2 gana con un número primo!")
     elif es_primo(total_jugador1) and es_primo(total_jugador2):
-        print(f"{'Jugador 1' if total_jugador1 > total_jugador2 else 'Jugador 2'} gana con un mayor número primo!")
+        print("Jugador 1 gana con un mayor número primo!" if total_jugador1 > total_jugador2 else "Jugador 2 gana con un mayor número primo!")
     else:
-        print(f"{'Jugador 1' if total_jugador1 > total_jugador2 else 'Jugador 2'} gana!")
+        print("Jugador 1 gana!" if total_jugador1 > total_jugador2 else "Jugador 2 gana!")
 
-# Ejecutar el juego
-jugar_prime_jack()
+# Ejecución del juego
+if __name__ == "__main__":
+    jugar_prime_jack()
