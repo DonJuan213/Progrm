@@ -1,0 +1,81 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+using namespace std;
+
+// Función para verificar si un número es primo
+bool esPrimo(int numero) {
+    if (numero <= 1) return false;
+    for (int i = 2; i * i <= numero; i++) {
+        if (numero % i == 0) return false;
+    }
+    return true;
+}
+
+// Función para tirar los dados
+int tirarDados() {
+    return (rand() % 6) + 1;
+}
+
+// Función para jugar Prime Jack
+void jugarPrimeJack() {
+    srand(time(0));
+    int totalJugador1 = 0, totalJugador2 = 0;
+
+    // Turno del Jugador 1
+    int dado1 = tirarDados(), dado2 = tirarDados();
+    cout << "Jugador 1 tira los dados: " << dado1 << " y " << dado2 << endl;
+    totalJugador1 = dado1 + dado2;
+
+    if (dado1 == dado2) {
+        cout << "Jugador 1 saca dobles y tira 3 dados adicionales." << endl;
+        for (int i = 0; i < 3; i++) {
+            totalJugador1 += tirarDados();
+        }
+    }
+
+    if (totalJugador1 == 12) {
+        cout << "Jugador 1 saca 12 y puede elegir tirar un dado." << endl;
+        totalJugador1 += tirarDados();
+        totalJugador1 = min(totalJugador1, 18);
+    }
+
+    // Turno del Jugador 2
+    dado1 = tirarDados();
+    dado2 = tirarDados();
+    cout << "Jugador 2 tira los dados: " << dado1 << " y " << dado2 << endl;
+    totalJugador2 = dado1 + dado2;
+
+    if (dado1 == dado2) {
+        cout << "Jugador 2 saca dobles y tira 3 dados adicionales." << endl;
+        for (int i = 0; i < 3; i++) {
+            totalJugador2 += tirarDados();
+        }
+    }
+
+    if (totalJugador2 == 12) {
+        cout << "Jugador 2 saca 12 y puede elegir tirar un dado." << endl;
+        totalJugador2 += tirarDados();
+        totalJugador2 = min(totalJugador2, 18);
+    }
+
+    // Determinar el ganador
+    cout << "Puntuación Jugador 1: " << totalJugador1 << " (primo: " << (esPrimo(totalJugador1) ? "Sí" : "No") << ")" << endl;
+    cout << "Puntuación Jugador 2: " << totalJugador2 << " (primo: " << (esPrimo(totalJugador2) ? "Sí" : "No") << ")" << endl;
+
+    if (esPrimo(totalJugador1) && !esPrimo(totalJugador2)) {
+        cout << "Jugador 1 gana con un número primo!" << endl;
+    } else if (!esPrimo(totalJugador1) && esPrimo(totalJugador2)) {
+        cout << "Jugador 2 gana con un número primo!" << endl;
+    } else if (esPrimo(totalJugador1) && esPrimo(totalJugador2)) {
+        cout << (totalJugador1 > totalJugador2 ? "Jugador 1 gana con un mayor número primo!" : "Jugador 2 gana con un mayor número primo!") << endl;
+    } else {
+        cout << (totalJugador1 > totalJugador2 ? "Jugador 1 gana!" : "Jugador 2 gana!") << endl;
+    }
+}
+
+int main() {
+    jugarPrimeJack();
+    return 0;
+}
